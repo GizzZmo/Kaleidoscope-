@@ -1,0 +1,86 @@
+<div class="relative w-screen h-screen">
+  <canvas #kaleidoscopeCanvas class="absolute top-0 left-0 w-full h-full bg-black"></canvas>
+  
+  @if (showTitle()) {
+    <div class="absolute inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-1000"
+         [class.opacity-0]="!showTitle()">
+      <div class="text-center text-white p-8 rounded-lg">
+        <h1 class="text-5xl md:text-7xl font-thin tracking-widest animate-pulse">
+          KALEIDOSCOPE
+        </h1>
+      </div>
+    </div>
+  }
+
+  <!-- Settings button -->
+  <button (click)="showControls.set(!showControls())" class="absolute top-4 right-4 z-20 text-white p-2 rounded-full hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50 transition-colors">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+    </svg>
+  </button>
+
+  <!-- Controls Panel -->
+  <div class="absolute top-0 right-0 h-full w-80 max-w-full bg-black/70 backdrop-blur-sm p-6 text-white shadow-lg transition-transform duration-300 ease-in-out z-10"
+       [class.translate-x-0]="showControls()"
+       [class.translate-x-full]="!showControls()">
+    
+    <div class="flex justify-between items-center mb-8">
+      <h2 class="text-2xl font-thin tracking-wider">CONTROLS</h2>
+      <button (click)="showControls.set(false)" class="p-1 rounded-full hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="space-y-6">
+      <div>
+        <label for="slices" class="flex justify-between mb-2 font-light">
+          <span>Slices</span>
+          <span>{{ numSlices() }}</span>
+        </label>
+        <input type="range" id="slices" min="2" max="36" [value]="numSlices()" (input)="numSlices.set(+$any($event.target).value)" class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer">
+      </div>
+
+      <div>
+        <label for="shapes" class="flex justify-between mb-2 font-light">
+          <span>Shapes</span>
+          <span>{{ maxShapes() }}</span>
+        </label>
+        <input type="range" id="shapes" min="5" max="100" [value]="maxShapes()" (input)="maxShapes.set(+$any($event.target).value)" class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer">
+      </div>
+
+      <div>
+        <label for="size" class="flex justify-between mb-2 font-light">
+          <span>Max Size</span>
+          <span>{{ shapeSize() }}</span>
+        </label>
+        <input type="range" id="size" min="5" max="50" [value]="shapeSize()" (input)="shapeSize.set(+$any($event.target).value)" class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer">
+      </div>
+
+      <div>
+        <label for="speed" class="flex justify-between mb-2 font-light">
+          <span>Speed</span>
+          <span>{{ shapeSpeed().toFixed(1) }}</span>
+        </label>
+        <input type="range" id="speed" min="0.5" max="5" step="0.1" [value]="shapeSpeed()" (input)="shapeSpeed.set(+$any($event.target).value)" class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer">
+      </div>
+
+      <div>
+        <label class="block mb-2 font-light">Color Palette</label>
+        <div class="flex flex-wrap gap-2">
+          @for (palette of palettes(); track palette) {
+            <button (click)="selectedPalette.set(palette)"
+                    class="px-3 py-1 text-sm font-medium rounded-full transition-colors"
+                    [class.bg-sky-500]="selectedPalette() === palette"
+                    [class.bg-gray-600]="selectedPalette() !== palette"
+                    [class.hover:bg-gray-500]="selectedPalette() !== palette">
+              {{ palette }}
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
