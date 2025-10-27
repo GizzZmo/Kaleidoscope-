@@ -20,11 +20,14 @@ export class AppComponent implements AfterViewInit {
   maxShapes = signal(20);
   shapeSize = signal(25);
   shapeSpeed = signal(1);
-  palettes = signal(['Random', 'Cosmic Fusion', 'Oceanic Dream', 'Sunset Blaze', 'Enchanted Forest', 'Neon Noir']);
+  rotationSpeed = signal(1);
+  palettes = signal(['Random', 'Cosmic Fusion', 'Oceanic Dream', 'Sunset Blaze', 'Enchanted Forest', 'Neon Noir', 'Pastel Dreams', 'Cyberpunk Sunset', 'Mystic Forest', 'Retro Arcade']);
   selectedPalette = signal('Random');
+  mousePosition = signal({ x: -1000, y: -1000 });
 
   host = {
-    '(window:resize)': 'onResize()'
+    '(window:resize)': 'onResize()',
+    '(window:mousemove)': 'onMouseMove($event)'
   };
 
   constructor() {
@@ -35,6 +38,7 @@ export class AppComponent implements AfterViewInit {
         maxShapes: this.maxShapes(),
         shapeSize: this.shapeSize(),
         shapeSpeed: this.shapeSpeed(),
+        rotationSpeed: this.rotationSpeed(),
         colorPalette: this.selectedPalette(),
       };
       
@@ -71,9 +75,13 @@ export class AppComponent implements AfterViewInit {
     }
   }
 
+  onMouseMove(event: MouseEvent): void {
+    this.mousePosition.set({ x: event.clientX, y: event.clientY });
+  }
+
   private animate(timestamp: number): void {
     if (!this.ctx) return;
-    this.kaleidoscopeService.draw(this.ctx, this.ctx.canvas.width, this.ctx.canvas.height, timestamp);
+    this.kaleidoscopeService.draw(this.ctx, this.ctx.canvas.width, this.ctx.canvas.height, timestamp, this.mousePosition());
     requestAnimationFrame((t) => this.animate(t));
   }
 }

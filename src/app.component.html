@@ -68,6 +68,14 @@
       </div>
 
       <div>
+        <label for="rotationSpeed" class="flex justify-between mb-2 font-light">
+          <span>Rotation Speed</span>
+          <span>{{ rotationSpeed().toFixed(1) }}</span>
+        </label>
+        <input type="range" id="rotationSpeed" min="0" max="5" step="0.1" [value]="rotationSpeed()" (input)="rotationSpeed.set(+$any($event.target).value)" class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer">
+      </div>
+
+      <div>
         <label class="block mb-2 font-light">Color Palette</label>
         <div class="flex flex-wrap gap-2">
           @for (palette of palettes(); track palette) {
